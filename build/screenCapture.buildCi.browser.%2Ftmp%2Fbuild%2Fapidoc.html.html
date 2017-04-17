@@ -1,0 +1,243 @@
+<html><head></head><body><div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a href="https://github.com/pgilad/grunt-dev-update#readme">grunt-dev-update (v2.2.0)</a>
+</h1>
+<h4>Automate the updating of your package.json packages with a grunt task</h4>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.grunt-dev-update">module grunt-dev-update</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.grunt-dev-update.dev_update">
+            function <span class="apidocSignatureSpan">grunt-dev-update.</span>dev_update
+            <span class="apidocSignatureSpan">(grunt)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.grunt-dev-update.dev_update">module grunt-dev-update.dev_update</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.grunt-dev-update.dev_update.dev_update">
+            function <span class="apidocSignatureSpan">grunt-dev-update.</span>dev_update
+            <span class="apidocSignatureSpan">(grunt)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.grunt-dev-update" id="apidoc.module.grunt-dev-update">module grunt-dev-update</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.grunt-dev-update.dev_update" id="apidoc.element.grunt-dev-update.dev_update">
+        function <span class="apidocSignatureSpan">grunt-dev-update.</span>dev_update
+        <span class="apidocSignatureSpan">(grunt)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">dev_update = function (grunt) {
+
+    var devUpdate = require('./lib/dev_update')(grunt);
+    var possibleUpdateTypes = ['report', 'force', 'prompt', 'fail'];
+
+    grunt.registerMultiTask('devUpdate', 'See your outdated devDependencies and update them', function () {
+
+        //set default options
+        var options = this.options({
+            updateType: 'report', //just report outdated packages
+            reportUpdated: false, //don't report up-to-date packages
+            semver: true, //stay within semver when updating
+            packages: {
+                devDependencies: true, //only check for devDependencies
+                dependencies: false
+            },
+            packageJson: null, //use matchdep default findup to locate package.json
+            reportOnlyPkgs: [] //use updateType action on all packages
+        });
+
+        grunt.verbose.writelns('Processing target: ' + this.target);
+
+        //validate updateType option
+        var updateType = options.updateType;
+        if (!includes(possibleUpdateTypes, updateType)) {
+            grunt.warn('updateType ' + String(updateType).cyan + ' not supported.');
+            //if force
+            options.updateType = 'report';
+        }
+
+        if (updateType === 'force') {
+            //warn user for using force option
+            grunt.log.writelns('Running with update type of ' + 'force'.red);
+        }
+
+        if (!Array.isArray(options.reportOnlyPkgs)) {
+            grunt.warn('ignoredPackages must be an array.', 3);
+            //if force
+            options.reportOnlyPkgs = [];
+        }
+
+        var _pkgjson = options.packageJson;
+        //use packageJson option as string, but file doesn't exist.
+        if (typeof _pkgjson === 'string') {
+            //path supplied is relative to process.cwd()
+            _pkgjson = path.resolve(process.cwd(), _pkgjson);
+
+            if (!grunt.file.exists(_pkgjson)) {
+                grunt.warn('Cannot locate package.json in supplied path ' + _pkgjson);
+                //if force
+                options.packageJson = null;
+            } else {
+                //update option to reflect change
+                options.packageJson = _pkgjson;
+            }
+        }
+        //run task
+        devUpdate.runTask(options, this.async());
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.grunt-dev-update.dev_update" id="apidoc.module.grunt-dev-update.dev_update">module grunt-dev-update.dev_update</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.grunt-dev-update.dev_update.dev_update" id="apidoc.element.grunt-dev-update.dev_update.dev_update">
+        function <span class="apidocSignatureSpan">grunt-dev-update.</span>dev_update
+        <span class="apidocSignatureSpan">(grunt)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">dev_update = function (grunt) {
+
+    var devUpdate = require('./lib/dev_update')(grunt);
+    var possibleUpdateTypes = ['report', 'force', 'prompt', 'fail'];
+
+    grunt.registerMultiTask('devUpdate', 'See your outdated devDependencies and update them', function () {
+
+        //set default options
+        var options = this.options({
+            updateType: 'report', //just report outdated packages
+            reportUpdated: false, //don't report up-to-date packages
+            semver: true, //stay within semver when updating
+            packages: {
+                devDependencies: true, //only check for devDependencies
+                dependencies: false
+            },
+            packageJson: null, //use matchdep default findup to locate package.json
+            reportOnlyPkgs: [] //use updateType action on all packages
+        });
+
+        grunt.verbose.writelns('Processing target: ' + this.target);
+
+        //validate updateType option
+        var updateType = options.updateType;
+        if (!includes(possibleUpdateTypes, updateType)) {
+            grunt.warn('updateType ' + String(updateType).cyan + ' not supported.');
+            //if force
+            options.updateType = 'report';
+        }
+
+        if (updateType === 'force') {
+            //warn user for using force option
+            grunt.log.writelns('Running with update type of ' + 'force'.red);
+        }
+
+        if (!Array.isArray(options.reportOnlyPkgs)) {
+            grunt.warn('ignoredPackages must be an array.', 3);
+            //if force
+            options.reportOnlyPkgs = [];
+        }
+
+        var _pkgjson = options.packageJson;
+        //use packageJson option as string, but file doesn't exist.
+        if (typeof _pkgjson === 'string') {
+            //path supplied is relative to process.cwd()
+            _pkgjson = path.resolve(process.cwd(), _pkgjson);
+
+            if (!grunt.file.exists(_pkgjson)) {
+                grunt.warn('Cannot locate package.json in supplied path ' + _pkgjson);
+                //if force
+                options.packageJson = null;
+            } else {
+                //update option to reflect change
+                options.packageJson = _pkgjson;
+            }
+        }
+        //run task
+        devUpdate.runTask(options, this.async());
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
+</body></html>
